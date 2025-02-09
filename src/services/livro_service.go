@@ -34,7 +34,11 @@ func (s *LivroService) validateLivro(livro *models.Livro) (err error) {
 		return errors.New("preço não pode ser negativo")
 	}
 
-	livroBanco := s.Repo.BuscarLivro(models.Livro{ISBN: livro.ISBN})
+	livroBanco, err := s.Repo.BuscarPrimeiro(models.Livro{ISBN: livro.ISBN})
+	if err != nil {
+		return err
+	}
+
 	if livroBanco.ID != livro.ID {
 		return errors.New("ISBN já está em uso")
 	}
@@ -47,7 +51,7 @@ func (s *LivroService) CreateLivro(livro *models.Livro) error {
 	if err := s.validateLivro(livro); err != nil {
 		return err
 	}
-	return s.Repo.Create(livro)
+	return s.Repo.Criar(livro)
 }
 
 // UpdateLivro: atualiza os dados de um livro
@@ -55,30 +59,35 @@ func (s *LivroService) UpdateLivro(livro *models.Livro) error {
 	if err := s.validateLivro(livro); err != nil {
 		return err
 	}
-	return s.Repo.Update(livro)
+	return s.Repo.Atualizar(livro)
 }
 
 // GetAllLivros: busca todos os livros do banco
 func (s *LivroService) GetAllLivros() ([]models.Livro, error) {
-	return s.Repo.FindAll()
+	return s.Repo.BuscarTodos()
 }
 
 // GetLivroByID: Busca um livro pelo ID
-func (s *LivroService) GetLivroByID(id uint) *models.Livro {
+func (s *LivroService) GetLivroByID(id uint) (livro *models.Livro) {
 	livroParametro := models.Livro{}
 	livroParametro.ID = id
-	return s.Repo.BuscarLivro(livroParametro)
+	livro, _ = s.Repo.BuscarPrimeiro(livroParametro)
+	return
 }
 
 // DeleteLivro: deleta um livro do banco
 func (s *LivroService) DeleteLivro(id uint) (err error) {
-	livroBanco := models.Livro{}
+	livroBanco := &models.Livro{}
 	livroBanco.ID = id
 
-	livroBanco = *s.Repo.BuscarLivro(livroBanco)
+	livroBanco, err = s.Repo.BuscarPrimeiro(*livroBanco)
+	if err != nil {
+		return err
+	}
+
 	if !livroBanco.IsID() {
 		return errors.New("livro não encontrado")
 	}
 
-	return s.Repo.Delete(id)
+	return s.Repo.Deletar(*livroBanco)
 }
