@@ -4,7 +4,6 @@ import (
 	"livraria_digital/src/models"
 	"livraria_digital/src/services"
 	"net/http"
-	"strconv"
 
 	"github.com/gin-gonic/gin"
 )
@@ -43,14 +42,10 @@ func (c *LivroController) GetAllLivros(ctx *gin.Context) {
 }
 
 func (c *LivroController) GetLivroByID(ctx *gin.Context) {
-	id, err := strconv.Atoi(ctx.Param("id"))
-	if err != nil {
-		ctx.JSON(http.StatusBadRequest, gin.H{"error": "ID inválido"})
-		return
-	}
+	id := retornarId(ctx)
 
-	livro, err := c.Service.GetLivroByID(uint(id))
-	if err != nil {
+	livro := c.Service.GetLivroByID(uint(id))
+	if !livro.IsID() {
 		ctx.JSON(http.StatusNotFound, gin.H{"error": "Livro não encontrado"})
 		return
 	}
@@ -59,11 +54,7 @@ func (c *LivroController) GetLivroByID(ctx *gin.Context) {
 }
 
 func (c *LivroController) UpdateLivro(ctx *gin.Context) {
-	id, err := strconv.Atoi(ctx.Param("id"))
-	if err != nil {
-		ctx.JSON(http.StatusBadRequest, gin.H{"error": "ID inválido"})
-		return
-	}
+	id := retornarId(ctx)
 
 	var livro models.Livro
 	if err := ctx.ShouldBindJSON(&livro); err != nil {
@@ -81,11 +72,7 @@ func (c *LivroController) UpdateLivro(ctx *gin.Context) {
 }
 
 func (c *LivroController) DeleteLivro(ctx *gin.Context) {
-	id, err := strconv.Atoi(ctx.Param("id"))
-	if err != nil {
-		ctx.JSON(http.StatusBadRequest, gin.H{"error": "ID inválido"})
-		return
-	}
+	id := retornarId(ctx)
 
 	if err := c.Service.DeleteLivro(uint(id)); err != nil {
 		ctx.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
