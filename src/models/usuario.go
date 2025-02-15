@@ -8,6 +8,7 @@ import (
 
 type Usuario struct {
 	gorm.Model
+	GenericModel[Usuario]
 	Nome        string    `json:"nome" gorm:"not null" validate:"required,min=2,max=100"`
 	Email       string    `json:"email" gorm:"unique;not null" validate:"required,email"`
 	Senha       string    `json:"senha" gorm:"not null" validate:"required,min=6"`

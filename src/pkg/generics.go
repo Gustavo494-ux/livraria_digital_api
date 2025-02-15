@@ -57,3 +57,25 @@ func SetarCampo(valor interface{}, campo string, valorCampo interface{}) error {
 
 	return nil
 }
+
+// CopiarSeVazio: copia os os campos de um struct para outro recurssivamente desde que os campos estejam vazios. Obs: só copia campos exportados
+func CopiarSeVazio(src, dest interface{}) {
+	srcVal := reflect.ValueOf(src).Elem()
+	destVal := reflect.ValueOf(dest).Elem()
+
+	for i := 0; i < srcVal.NumField(); i++ {
+		fieldSrc := srcVal.Field(i)
+		fieldDest := destVal.Field(i)
+
+		// Verifica se o campo é exportado (ou seja, começa com uma letra maiúscula)
+		if srcVal.Type().Field(i).PkgPath == "" {
+			if fieldSrc.Kind() == reflect.Struct {
+				CopiarSeVazio(fieldSrc.Addr().Interface(), fieldDest.Addr().Interface())
+			} else {
+				if fieldDest.IsZero() {
+					fieldDest.Set(fieldSrc)
+				}
+			}
+		}
+	}
+}

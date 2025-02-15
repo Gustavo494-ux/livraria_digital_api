@@ -54,11 +54,6 @@ func (s *GenericServices[T]) BuscarTodos() ([]T, error) {
 	return s.Repo.BuscarTodos()
 }
 
-// Buscar: busca todos os registros no banco de dados que cumprirem os requisitos dos parametros
-func (s *GenericServices[T]) Buscar(valor T) ([]T, error) {
-	return s.Repo.Buscar(valor)
-}
-
 // Buscar: busca o registro com Id fornecido
 func (s *GenericServices[T]) BuscarPorId(Id int) (T, error) {
 	var valor T
@@ -79,6 +74,11 @@ func (s *GenericServices[T]) Atualizar(Id int, valor *T) (err error) {
 	if Generics.RetornarCampo(registroBanco, "ID", 0).(uint) < 1 {
 		return errors.New("nenhum registro encontrado")
 	}
+
+	Generics.CopiarSeVazio(
+		&registroBanco,
+		valor,
+	)
 
 	return s.Repo.Atualizar(valor)
 }
