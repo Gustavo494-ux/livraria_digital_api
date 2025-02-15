@@ -8,6 +8,7 @@ import (
 
 type Livro struct {
 	gorm.Model
+	GenericModel[Livro]
 	Titulo         string    `json:"titulo" gorm:"not null" validate:"required,min=2,max=100"`
 	Autor          string    `json:"autor" gorm:"not null" validate:"required,min=2,max=100"`
 	Estoque        int       `json:"estoque" gorm:"not null" validate:"required,min=0"`
