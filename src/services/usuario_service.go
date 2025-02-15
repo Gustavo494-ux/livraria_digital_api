@@ -15,3 +15,8 @@ func NewUsuarioService(repo *repository.GenericRepository[models.Usuario]) *Usua
 		GenericServices: *NewGenericServices[models.Usuario](repo),
 	}
 }
+
+// ToGenericService: retorna uma instância de GenericServices
+func (u *UsuarioService) ToGenericService() *GenericServices[models.Usuario] {
+	return &u.GenericServices
+}

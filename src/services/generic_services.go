@@ -59,8 +59,10 @@ func (s *GenericServices[T]) Buscar(valor T) ([]T, error) {
 	return s.Repo.Buscar(valor)
 }
 
-// Buscar: busca o primeiro registro que cumprir os requisitos
-func (s *GenericServices[T]) BuscarPrimeiro(valor T) (T, error) {
+// Buscar: busca o registro com Id fornecido
+func (s *GenericServices[T]) BuscarPorId(Id int) (T, error) {
+	var valor T
+	Generics.SetarCampo(valor, "ID", 0)
 	return s.Repo.BuscarPrimeiro(valor)
 
 }

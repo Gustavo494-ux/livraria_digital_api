@@ -5,7 +5,6 @@ type Services[T any] interface {
 	Criar(valor *T) (err error)
 	Atualizar(Id int, valor *T) (err error)
 	BuscarTodos() (resultado []T, err error)
-	Buscar(valor T) (resultado []T, err error)
-	BuscarPrimeiro(valor T) (resultado T, err error)
+	BuscarPorId(Id int) (resultado T, err error)
 	Deletar(id int) (err error)
 }
