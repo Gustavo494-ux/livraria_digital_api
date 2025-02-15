@@ -68,7 +68,7 @@ func (s *LivroService) GetAllLivros() ([]models.Livro, error) {
 }
 
 // GetLivroByID: Busca um livro pelo ID
-func (s *LivroService) GetLivroByID(id uint) (livro *models.Livro) {
+func (s *LivroService) GetLivroByID(id uint) (livro models.Livro) {
 	livroParametro := models.Livro{}
 	livroParametro.ID = id
 	livro, _ = s.Repo.BuscarPrimeiro(livroParametro)
@@ -77,10 +77,10 @@ func (s *LivroService) GetLivroByID(id uint) (livro *models.Livro) {
 
 // DeleteLivro: deleta um livro do banco
 func (s *LivroService) DeleteLivro(id uint) (err error) {
-	livroBanco := &models.Livro{}
+	livroBanco := models.Livro{}
 	livroBanco.ID = id
 
-	livroBanco, err = s.Repo.BuscarPrimeiro(*livroBanco)
+	livroBanco, err = s.Repo.BuscarPrimeiro(livroBanco)
 	if err != nil {
 		return err
 	}
@@ -89,5 +89,5 @@ func (s *LivroService) DeleteLivro(id uint) (err error) {
 		return errors.New("livro não encontrado")
 	}
 
-	return s.Repo.Deletar(*livroBanco)
+	return s.Repo.Deletar(livroBanco)
 }

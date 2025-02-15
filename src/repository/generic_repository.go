@@ -37,13 +37,13 @@ func (r *GenericRepository[T]) Buscar(criteria T) ([]T, error) {
 }
 
 // BuscarPrimeiro: busca o primeiro registro que corresponde aos critérios fornecidos
-func (r *GenericRepository[T]) BuscarPrimeiro(criteria T) (*T, error) {
+func (r *GenericRepository[T]) BuscarPrimeiro(criteria T) (T, error) {
 	var entity T
 	err := r.DB.Where(criteria).First(&entity).Error
 	if err != nil && err != gorm.ErrRecordNotFound {
-		return nil, err
+		return entity, err
 	}
-	return &entity, nil
+	return entity, nil
 }
 
 // Atualizar: atualiza um registro no banco de dados

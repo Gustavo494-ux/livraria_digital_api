@@ -18,11 +18,31 @@ func SetupRoutes() *gin.Engine {
 	config.InitDB()
 	db := config.DB
 
+	configurarUsuarios(r, db)
 	configurarLivros(r, db)
 
 	middlewares.Configurar(r)
 	r.Use(gin.Recovery())
 	return r
+}
+
+// configurarUsuarios: Realiza a configurações necessárias para a utilização do crud de usuários
+func configurarUsuarios(r *gin.Engine, db *gorm.DB) {
+	db.AutoMigrate(&models.Usuario{})
+
+	var repo = repository.NewUsuarioRepository(db).ToGenericRepository()
+	service := services.NewUsuarioService(repo)
+	controller := controllers.NewUsuarioController(service)
+
+	usuarios := r.Group("/usuarios")
+	{
+		usuarios.GET("", controller.BuscarTodos)
+		usuarios.POST("", controller.Criar)
+		usuarios.GET("/:id", controller.BuscarPorId)
+		usuarios.PUT("/:id", controller.Atualizar)
+		usuarios.DELETE("/:id", controller.Deletar)
+	}
+
 }
 
 // configurarLivros: Realiza a configurações necessárias para a utilização do crud de livros
@@ -33,13 +53,13 @@ func configurarLivros(r *gin.Engine, db *gorm.DB) {
 	livroService := services.NewLivroService(livroRepo)
 	livroController := controllers.NewLivroController(livroService)
 
-	r.Group("/livros")
+	livros := r.Group("/livros")
 	{
-		r.GET("", livroController.GetAllLivros)
-		r.POST("", livroController.CreateLivro)
-		r.GET("/:id", livroController.GetLivroByID)
-		r.PUT("/:id", livroController.UpdateLivro)
-		r.DELETE("/:id", livroController.DeleteLivro)
+		livros.GET("", livroController.GetAllLivros)
+		livros.POST("", livroController.CreateLivro)
+		livros.GET("/:id", livroController.GetLivroByID)
+		livros.PUT("/:id", livroController.UpdateLivro)
+		livros.DELETE("/:id", livroController.DeleteLivro)
 	}
 
 }
