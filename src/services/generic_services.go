@@ -62,7 +62,7 @@ func (s *GenericServices[T]) Buscar(valor T) ([]T, error) {
 // Buscar: busca o registro com Id fornecido
 func (s *GenericServices[T]) BuscarPorId(Id int) (T, error) {
 	var valor T
-	Generics.SetarCampo(valor, "ID", 0)
+	Generics.SetarCampo(valor, "ID", Id)
 	return s.Repo.BuscarPrimeiro(valor)
 
 }
@@ -85,8 +85,17 @@ func (s *GenericServices[T]) Atualizar(Id int, valor *T) (err error) {
 
 // Deletar: remove um registro do banco de dados pelo ID
 func (s *GenericServices[T]) Deletar(Id int) error {
-	var instancia T
-	Generics.SetarCampo(&instancia, "ID", uint(Id))
+	var entidade T
+	Generics.SetarCampo(&entidade, "ID", uint(Id))
 
-	return s.Repo.Deletar(instancia)
+	entidadeBanco, err := s.Repo.BuscarPrimeiro(entidade)
+	if err != nil {
+		return err
+	}
+
+	if (Generics.RetornarCampo(entidadeBanco, "ID", 0)).(uint) < 1 {
+		return errors.New("registro não encontrado")
+	}
+
+	return s.Repo.Deletar(entidadeBanco)
 }
