@@ -1,102 +1,990 @@
 {
-    "info": {
-      "_postman_id": "c0f0e0b0-0b0b-0b0b-0b0b-0b0b0b0b0b0b",
-      "name": "Livraria API",
-      "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  "info": {
+    "_postman_id": "f47ac10b-58cc-4372-a567-0e02b2c3d479",
+    "name": "Livraria Digital API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": "Documentação completa da API da Livraria Digital, incluindo todas as entidades (Autores, Categorias, Editoras, Livros, Usuários), testes automatizados e exemplo de teste de carga."
+  },
+  "item": [
+    {
+      "name": "Autores",
+      "description": "Operações relacionadas a autores.",
+      "item": [
+        {
+          "name": "Criar Autor",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nome\": \"J.K. Rowling\",\n  \"data_nascimento\": \"1965-07-31\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/autores",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "autores"
+              ]
+            }
+          },
+          "response": [],
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 201\", function () {",
+                  "    pm.response.to.have.status(201);",
+                  "});",
+                  "pm.test(\"Response has required fields\", function () {",
+                  "    pm.expect(pm.response.json().nome).to.eql(\"J.K. Rowling\");",
+                  "    pm.expect(pm.response.json().data_nascimento).to.eql(\"1965-07-31\");",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ]
+        },
+        {
+          "name": "Buscar Todos Autores",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/autores",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "autores"
+              ]
+            }
+          },
+          "response": [],
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "pm.test(\"Response is an array\", function () {",
+                  "    pm.expect(pm.response.json()).to.be.an(\"array\");",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ]
+        },
+        {
+          "name": "Buscar Autor por ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/autores/1",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "autores",
+                "1"
+              ]
+            }
+          },
+          "response": [],
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "pm.test(\"Response has required fields\", function () {",
+                  "    pm.expect(pm.response.json().nome).to.be.a(\"string\");",
+                  "    pm.expect(pm.response.json().data_nascimento).to.be.a(\"string\");",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ]
+        },
+        {
+          "name": "Atualizar Autor",
+          "request": {
+            "method": "PUT",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nome\": \"J.K. Rowling Atualizado\",\n  \"data_nascimento\": \"1965-07-31\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/autores/1",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "autores",
+                "1"
+              ]
+            }
+          },
+          "response": [],
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "pm.test(\"Response has updated fields\", function () {",
+                  "    pm.expect(pm.response.json().nome).to.eql(\"J.K. Rowling Atualizado\");",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ]
+        },
+        {
+          "name": "Deletar Autor",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/autores/1",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "autores",
+                "1"
+              ]
+            }
+          },
+          "response": [],
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 204\", function () {",
+                  "    pm.response.to.have.status(204);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ]
+        }
+      ]
     },
-    "item": [
-      {
-        "name": "Listar todos os livros",
-        "request": {
-          "method": "GET",
-          "header": [],
-          "url": {
-            "raw": "http://localhost:8080/livros",
-            "protocol": "http",
-            "host": ["localhost"],
-            "port": "8080",
-            "path": ["livros"]
-          }
-        },
-        "response": []
-      },
-      {
-        "name": "Obter livro por ID",
-        "request": {
-          "method": "GET",
-          "header": [],
-          "url": {
-            "raw": "http://localhost:8080/livros/1",
-            "protocol": "http",
-            "host": ["localhost"],
-            "port": "8080",
-            "path": ["livros", "1"]
-          }
-        },
-        "response": []
-      },
-      {
-        "name": "Criar um novo livro",
-        "request": {
-          "method": "POST",
-          "header": [
-            {
-              "key": "Content-Type",
-              "value": "application/json"
+    {
+      "name": "Categorias",
+      "description": "Operações relacionadas a categorias.",
+      "item": [
+        {
+          "name": "Criar Categoria",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nome\": \"Ficção Científica\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/categorias",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "categorias"
+              ]
             }
-          ],
-          "body": {
-            "mode": "raw",
-            "raw": "{\n  \"titulo\": \"Dom Casmurro\",\n  \"autor\": \"Machado de Assis\",\n  \"estoque\": 10\n}"
           },
-          "url": {
-            "raw": "http://localhost:8080/livros",
-            "protocol": "http",
-            "host": ["localhost"],
-            "port": "8080",
-            "path": ["livros"]
-          }
-        },
-        "response": []
-      },
-      {
-        "name": "Atualizar um livro existente",
-        "request": {
-          "method": "PUT",
-          "header": [
+          "response": [],
+          "event": [
             {
-              "key": "Content-Type",
-              "value": "application/json"
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 201\", function () {",
+                  "    pm.response.to.have.status(201);",
+                  "});",
+                  "pm.test(\"Response has required fields\", function () {",
+                  "    pm.expect(pm.response.json().nome).to.eql(\"Ficção Científica\");",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
             }
-          ],
-          "body": {
-            "mode": "raw",
-            "raw": "{\n  \"titulo\": \"Dom Casmurro\",\n  \"autor\": \"Machado de Assis\",\n  \"estoque\": 5\n}"
+          ]
+        },
+        {
+          "name": "Buscar Todas Categorias",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/categorias",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "categorias"
+              ]
+            }
           },
-          "url": {
-            "raw": "http://localhost:8080/livros/1",
-            "protocol": "http",
-            "host": ["localhost"],
-            "port": "8080",
-            "path": ["livros", "1"]
-          }
+          "response": [],
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "pm.test(\"Response is an array\", function () {",
+                  "    pm.expect(pm.response.json()).to.be.an(\"array\");",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ]
         },
-        "response": []
-      },
-      {
-        "name": "Deletar um livro",
-        "request": {
-          "method": "DELETE",
-          "header": [],
-          "url": {
-            "raw": "http://localhost:8080/livros/1",
-            "protocol": "http",
-            "host": ["localhost"],
-            "port": "8080",
-            "path": ["livros", "1"]
-          }
+        {
+          "name": "Buscar Categoria por ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/categorias/1",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "categorias",
+                "1"
+              ]
+            }
+          },
+          "response": [],
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "pm.test(\"Response has required fields\", function () {",
+                  "    pm.expect(pm.response.json().nome).to.be.a(\"string\");",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ]
         },
-        "response": []
-      }
-    ]
-  }
+        {
+          "name": "Atualizar Categoria",
+          "request": {
+            "method": "PUT",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nome\": \"Ficção Científica Atualizada\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/categorias/1",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "categorias",
+                "1"
+              ]
+            }
+          },
+          "response": [],
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "pm.test(\"Response has updated fields\", function () {",
+                  "    pm.expect(pm.response.json().nome).to.eql(\"Ficção Científica Atualizada\");",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ]
+        },
+        {
+          "name": "Deletar Categoria",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/categorias/1",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "categorias",
+                "1"
+              ]
+            }
+          },
+          "response": [],
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 204\", function () {",
+                  "    pm.response.to.have.status(204);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Editoras",
+      "description": "Operações relacionadas a editoras.",
+      "item": [
+        {
+          "name": "Criar Editora",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nome\": \"Editora Abril\",\n  \"endereco\": \"Rua das Flores, 123\",\n  \"telefone\": \"11987654321\",\n  \"email\": \"contato@editoraabril.com\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/editoras",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "editoras"
+              ]
+            }
+          },
+          "response": [],
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 201\", function () {",
+                  "    pm.response.to.have.status(201);",
+                  "});",
+                  "pm.test(\"Response has required fields\", function () {",
+                  "    pm.expect(pm.response.json().nome).to.eql(\"Editora Abril\");",
+                  "    pm.expect(pm.response.json().endereco).to.eql(\"Rua das Flores, 123\");",
+                  "    pm.expect(pm.response.json().telefone).to.eql(\"11987654321\");",
+                  "    pm.expect(pm.response.json().email).to.eql(\"contato@editoraabril.com\");",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ]
+        },
+        {
+          "name": "Buscar Todas Editoras",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/editoras",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "editoras"
+              ]
+            }
+          },
+          "response": [],
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "pm.test(\"Response is an array\", function () {",
+                  "    pm.expect(pm.response.json()).to.be.an(\"array\");",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ]
+        },
+        {
+          "name": "Buscar Editora por ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/editoras/1",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "editoras",
+                "1"
+              ]
+            }
+          },
+          "response": [],
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "pm.test(\"Response has required fields\", function () {",
+                  "    pm.expect(pm.response.json().nome).to.be.a(\"string\");",
+                  "    pm.expect(pm.response.json().endereco).to.be.a(\"string\");",
+                  "    pm.expect(pm.response.json().telefone).to.be.a(\"string\");",
+                  "    pm.expect(pm.response.json().email).to.be.a(\"string\");",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ]
+        },
+        {
+          "name": "Atualizar Editora",
+          "request": {
+            "method": "PUT",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nome\": \"Editora Abril Atualizada\",\n  \"endereco\": \"Rua das Flores, 123 Atualizada\",\n  \"telefone\": \"11987654321\",\n  \"email\": \"contato@editoraabril.com\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/editoras/1",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "editoras",
+                "1"
+              ]
+            }
+          },
+          "response": [],
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "pm.test(\"Response has updated fields\", function () {",
+                  "    pm.expect(pm.response.json().nome).to.eql(\"Editora Abril Atualizada\");",
+                  "    pm.expect(pm.response.json().endereco).to.eql(\"Rua das Flores, 123 Atualizada\");",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ]
+        },
+        {
+          "name": "Deletar Editora",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/editoras/1",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "editoras",
+                "1"
+              ]
+            }
+          },
+          "response": [],
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 204\", function () {",
+                  "    pm.response.to.have.status(204);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Livros",
+      "description": "Operações relacionadas a livros.",
+      "item": [
+        {
+          "name": "Criar Livro",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"titulo\": \"Harry Potter e a Pedra Filosofal\",\n  \"autor\": \"J.K. Rowling\",\n  \"estoque\": 100,\n  \"isbn\": \"9788532511010\",\n  \"preco\": 29.90,\n  \"data_publicacao\": \"1997-06-26\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/livros",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "livros"
+              ]
+            }
+          },
+          "response": [],
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 201\", function () {",
+                  "    pm.response.to.have.status(201);",
+                  "});",
+                  "pm.test(\"Response has required fields\", function () {",
+                  "    pm.expect(pm.response.json().titulo).to.eql(\"Harry Potter e a Pedra Filosofal\");",
+                  "    pm.expect(pm.response.json().autor).to.eql(\"J.K. Rowling\");",
+                  "    pm.expect(pm.response.json().estoque).to.eql(100);",
+                  "    pm.expect(pm.response.json().isbn).to.eql(\"9788532511010\");",
+                  "    pm.expect(pm.response.json().preco).to.eql(29.90);",
+                  "    pm.expect(pm.response.json().data_publicacao).to.eql(\"1997-06-26\");",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ]
+        },
+        {
+          "name": "Buscar Todos Livros",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/livros",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "livros"
+              ]
+            }
+          },
+          "response": [],
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "pm.test(\"Response is an array\", function () {",
+                  "    pm.expect(pm.response.json()).to.be.an(\"array\");",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ]
+        },
+        {
+          "name": "Buscar Livro por ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/livros/1",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "livros",
+                "1"
+              ]
+            }
+          },
+          "response": [],
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "pm.test(\"Response has required fields\", function () {",
+                  "    pm.expect(pm.response.json().titulo).to.be.a(\"string\");",
+                  "    pm.expect(pm.response.json().autor).to.be.a(\"string\");",
+                  "    pm.expect(pm.response.json().estoque).to.be.a(\"number\");",
+                  "    pm.expect(pm.response.json().isbn).to.be.a(\"string\");",
+                  "    pm.expect(pm.response.json().preco).to.be.a(\"number\");",
+                  "    pm.expect(pm.response.json().data_publicacao).to.be.a(\"string\");",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ]
+        },
+        {
+          "name": "Atualizar Livro",
+          "request": {
+            "method": "PUT",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"titulo\": \"Harry Potter e a Pedra Filosofal Atualizado\",\n  \"autor\": \"J.K. Rowling Atualizado\",\n  \"estoque\": 150,\n  \"isbn\": \"9788532511010\",\n  \"preco\": 39.90,\n  \"data_publicacao\": \"1997-06-26\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/livros/1",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "livros",
+                "1"
+              ]
+            }
+          },
+          "response": [],
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "pm.test(\"Response has updated fields\", function () {",
+                  "    pm.expect(pm.response.json().titulo).to.eql(\"Harry Potter e a Pedra Filosofal Atualizado\");",
+                  "    pm.expect(pm.response.json().autor).to.eql(\"J.K. Rowling Atualizado\");",
+                  "    pm.expect(pm.response.json().estoque).to.eql(150);",
+                  "    pm.expect(pm.response.json().preco).to.eql(39.90);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ]
+        },
+        {
+          "name": "Deletar Livro",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/livros/1",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "livros",
+                "1"
+              ]
+            }
+          },
+          "response": [],
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 204\", function () {",
+                  "    pm.response.to.have.status(204);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Usuários",
+      "description": "Operações relacionadas a usuários.",
+      "item": [
+        {
+          "name": "Criar Usuário",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nome\": \"João Silva\",\n  \"email\": \"joao.silva@example.com\",\n  \"senha\": \"senha123\",\n  \"ativo\": true\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/usuarios",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "usuarios"
+              ]
+            }
+          },
+          "response": [],
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 201\", function () {",
+                  "    pm.response.to.have.status(201);",
+                  "});",
+                  "pm.test(\"Response has required fields\", function () {",
+                  "    pm.expect(pm.response.json().nome).to.eql(\"João Silva\");",
+                  "    pm.expect(pm.response.json().email).to.eql(\"joao.silva@example.com\");",
+                  "    pm.expect(pm.response.json().ativo).to.eql(true);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ]
+        },
+        {
+          "name": "Buscar Todos Usuários",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/usuarios",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "usuarios"
+              ]
+            }
+          },
+          "response": [],
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "pm.test(\"Response is an array\", function () {",
+                  "    pm.expect(pm.response.json()).to.be.an(\"array\");",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ]
+        },
+        {
+          "name": "Buscar Usuário por ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/usuarios/1",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "usuarios",
+                "1"
+              ]
+            }
+          },
+          "response": [],
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "pm.test(\"Response has required fields\", function () {",
+                  "    pm.expect(pm.response.json().nome).to.be.a(\"string\");",
+                  "    pm.expect(pm.response.json().email).to.be.a(\"string\");",
+                  "    pm.expect(pm.response.json().ativo).to.be.a(\"boolean\");",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ]
+        },
+        {
+          "name": "Atualizar Usuário",
+          "request": {
+            "method": "PUT",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nome\": \"João Silva Atualizado\",\n  \"email\": \"joao.silva.atualizado@example.com\",\n  \"senha\": \"senha123atualizada\",\n  \"ativo\": false\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/usuarios/1",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "usuarios",
+                "1"
+              ]
+            }
+          },
+          "response": [],
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "pm.test(\"Response has updated fields\", function () {",
+                  "    pm.expect(pm.response.json().nome).to.eql(\"João Silva Atualizado\");",
+                  "    pm.expect(pm.response.json().email).to.eql(\"joao.silva.atualizado@example.com\");",
+                  "    pm.expect(pm.response.json().ativo).to.eql(false);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ]
+        },
+        {
+          "name": "Deletar Usuário",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/usuarios/1",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "usuarios",
+                "1"
+              ]
+            }
+          },
+          "response": [],
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 204\", function () {",
+                  "    pm.response.to.have.status(204);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "variable": [
+    {
+      "key": "base_url",
+      "value": "http://localhost:8080",
+      "description": "URL base da API"
+    }
+  ]
+}
