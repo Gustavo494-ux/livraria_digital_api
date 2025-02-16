@@ -3,6 +3,7 @@ package controllers
 import (
 	"bytes"
 	"encoding/json"
+	interfaces "livraria_digital/src/interfaces/controller"
 	"net/http"
 	"net/http/httptest"
 	"testing"
@@ -11,17 +12,8 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-// GenericController é uma interface que define os métodos que o controlador genérico deve implementar
-type GenericController interface {
-	Criar(ctx *gin.Context)
-	BuscarTodos(ctx *gin.Context)
-	BuscarPorId(ctx *gin.Context)
-	Atualizar(ctx *gin.Context)
-	Deletar(ctx *gin.Context)
-}
-
 // TesteCriarGenerico testa a criação de uma entidade genérica
-func TesteCriarGenerico(t *testing.T, controller GenericController, payload interface{}, expectedStatus int, expectedError string) {
+func TesteCriarGenerico(t *testing.T, controller interfaces.Controller, payload interface{}, expectedStatus int, expectedError string) {
 	payloadJSON, _ := json.Marshal(payload)
 	req, _ := http.NewRequest("POST", "/", bytes.NewBuffer(payloadJSON))
 	req.Header.Set("Content-Type", "application/json")
@@ -39,7 +31,7 @@ func TesteCriarGenerico(t *testing.T, controller GenericController, payload inte
 }
 
 // TestGetAllGeneric testa a listagem de todas as entidades genéricas
-func TesteBuscarTodosGenerico(t *testing.T, controller GenericController, expectedStatus int, expectedCount int) {
+func TesteBuscarTodosGenerico(t *testing.T, controller interfaces.Controller, expectedStatus int, expectedCount int) {
 	req, _ := http.NewRequest("GET", "/", nil)
 	w := httptest.NewRecorder()
 	ctx, _ := gin.CreateTestContext(w)
@@ -55,7 +47,7 @@ func TesteBuscarTodosGenerico(t *testing.T, controller GenericController, expect
 }
 
 // TesteBuscarPorIdGenerico testa a busca de uma entidade genérica por ID
-func TesteBuscarPorIdGenerico(t *testing.T, controller GenericController, entityID string, expectedStatus int, expectedError string) {
+func TesteBuscarPorIdGenerico(t *testing.T, controller interfaces.Controller, entityID string, expectedStatus int, expectedError string) {
 	req, _ := http.NewRequest("GET", "/"+entityID, nil)
 	w := httptest.NewRecorder()
 	ctx, _ := gin.CreateTestContext(w)
@@ -71,7 +63,7 @@ func TesteBuscarPorIdGenerico(t *testing.T, controller GenericController, entity
 }
 
 // TesteAtualizarGenerico testa a atualização de uma entidade genérica
-func TesteAtualizarGenerico(t *testing.T, controller GenericController, entityID string, payload interface{}, expectedStatus int, expectedError string) {
+func TesteAtualizarGenerico(t *testing.T, controller interfaces.Controller, entityID string, payload interface{}, expectedStatus int, expectedError string) {
 	payloadJSON, _ := json.Marshal(payload)
 	req, _ := http.NewRequest("PUT", "/"+entityID, bytes.NewBuffer(payloadJSON))
 	req.Header.Set("Content-Type", "application/json")
@@ -89,7 +81,7 @@ func TesteAtualizarGenerico(t *testing.T, controller GenericController, entityID
 }
 
 // TesteDeletarGenerico testa a exclusão de uma entidade genérica
-func TesteDeletarGenerico(t *testing.T, controller GenericController, entityID string, expectedStatus int, expectedError string) {
+func TesteDeletarGenerico(t *testing.T, controller interfaces.Controller, entityID string, expectedStatus int, expectedError string) {
 	req, _ := http.NewRequest("DELETE", "/"+entityID, nil)
 	w := httptest.NewRecorder()
 	ctx, _ := gin.CreateTestContext(w)

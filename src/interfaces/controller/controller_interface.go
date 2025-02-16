@@ -2,7 +2,7 @@ package interfaces
 
 import "github.com/gin-gonic/gin"
 
-type Controller[T any] interface {
+type Controller interface {
 	Criar(ctx *gin.Context)
 	BuscarTodos(ctx *gin.Context)
 	BuscarPorId(ctx *gin.Context)
