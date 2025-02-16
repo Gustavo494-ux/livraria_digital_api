@@ -8,18 +8,18 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-// GenericRepository é uma estrutura genérica para operações de CRUD na camada controller
-type GenericRepository[T any] struct {
+// GenericController é uma estrutura genérica para operações de CRUD na camada controller
+type GenericController[T any] struct {
 	Service *services.GenericServices[T]
 }
 
 // NewGenericController cria uma nova instância do controller genérico
-func NewGenericController[T any](service *services.GenericServices[T]) *GenericRepository[T] {
-	return &GenericRepository[T]{Service: service}
+func NewGenericController[T any](service *services.GenericServices[T]) *GenericController[T] {
+	return &GenericController[T]{Service: service}
 }
 
 // Criar: cria um novo registro no banco de dados
-func (c *GenericRepository[T]) Criar(ctx *gin.Context) {
+func (c *GenericController[T]) Criar(ctx *gin.Context) {
 	var entidade T
 	if err := ctx.ShouldBindJSON(&entidade); err != nil {
 		ctx.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
@@ -35,7 +35,7 @@ func (c *GenericRepository[T]) Criar(ctx *gin.Context) {
 }
 
 // BuscarTodos: busca todos os registros no banco de dados
-func (c *GenericRepository[T]) BuscarTodos(ctx *gin.Context) {
+func (c *GenericController[T]) BuscarTodos(ctx *gin.Context) {
 	entidades, err := c.Service.BuscarTodos()
 	if err != nil {
 		ctx.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
@@ -46,7 +46,7 @@ func (c *GenericRepository[T]) BuscarTodos(ctx *gin.Context) {
 }
 
 // Buscar: busca o registro com Id fornecido
-func (c *GenericRepository[T]) BuscarPorId(ctx *gin.Context) {
+func (c *GenericController[T]) BuscarPorId(ctx *gin.Context) {
 	entidadeBanco, err := c.Service.BuscarPorId(retornarId(ctx))
 	if err != nil {
 		ctx.Error(err)
@@ -62,7 +62,7 @@ func (c *GenericRepository[T]) BuscarPorId(ctx *gin.Context) {
 }
 
 // Atualizar: atualiza um registro no banco de dados
-func (c *GenericRepository[T]) Atualizar(ctx *gin.Context) {
+func (c *GenericController[T]) Atualizar(ctx *gin.Context) {
 	id := retornarId(ctx)
 
 	var entidade T
@@ -86,7 +86,7 @@ func (c *GenericRepository[T]) Atualizar(ctx *gin.Context) {
 }
 
 // Deletar: remove um registro do banco de dados pelo ID
-func (c *GenericRepository[T]) Deletar(ctx *gin.Context) {
+func (c *GenericController[T]) Deletar(ctx *gin.Context) {
 	if err := c.Service.Deletar(retornarId(ctx)); err != nil {
 		ctx.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return

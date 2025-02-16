@@ -6,11 +6,11 @@ import (
 )
 
 type LivroController struct {
-	GenericRepository[models.Livro]
+	GenericController[models.Livro]
 }
 
 func NewLivroController(service *services.GenericServices[models.Livro]) *LivroController {
 	return &LivroController{
-		GenericRepository: *NewGenericController[models.Livro](service),
+		GenericController: *NewGenericController[models.Livro](service),
 	}
 }

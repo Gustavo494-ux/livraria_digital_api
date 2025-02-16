@@ -13,7 +13,7 @@ import (
 )
 
 // setupTest inicializa o banco de dados em memória e retorna o controller para testes
-func setupTest() (*GenericRepository[models.Livro], *gorm.DB) {
+func setupTest() (*GenericController[models.Livro], *gorm.DB) {
 	db, err := gorm.Open(sqlite.Open(":memory:"), &gorm.Config{})
 	if err != nil {
 		panic("Falha ao conectar ao banco de dados de teste")

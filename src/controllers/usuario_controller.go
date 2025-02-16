@@ -6,11 +6,16 @@ import (
 )
 
 type UsuarioController struct {
-	GenericRepository[models.Usuario]
+	GenericController[models.Usuario]
 }
 
 func NewUsuarioController(service *services.GenericServices[models.Usuario]) *UsuarioController {
 	return &UsuarioController{
-		GenericRepository: *NewGenericController[models.Usuario](service),
+		GenericController: *NewGenericController[models.Usuario](service),
 	}
+}
+
+// ToGenericController: retorna uma instância de GenericController
+func (u *UsuarioController) ToGenericController() *GenericController[models.Usuario] {
+	return &u.GenericController
 }
