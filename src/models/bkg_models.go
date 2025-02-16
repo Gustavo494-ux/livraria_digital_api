@@ -2,27 +2,6 @@ package models
 
 // Struct comentadas para serem implementadas corretamente depois.
 
-// type Autor struct {
-// 	gorm.Model
-// 	Nome           string    `json:"nome" gorm:"not null" validate:"required,min=2,max=100"`
-// 	DataNascimento time.Time `json:"data_nascimento" gorm:"not null" validate:"required"`
-// 	Nacionalidade  string    `json:"nacionalidade" gorm:"not null" validate:"required,min=2,max=100"`
-// 	Biografia      string    `json:"biografia" gorm:"type:text"`
-// }
-
-// type Editora struct {
-// 	gorm.Model
-// 	Nome     string `json:"nome" gorm:"not null" validate:"required,min=2,max=100"`
-// 	Endereco string `json:"endereco" gorm:"not null" validate:"required,min=2,max=255"`
-// 	Telefone string `json:"telefone" gorm:"not null" validate:"required,min=10,max=15"`
-// 	Email    string `json:"email" gorm:"not null" validate:"required,email"`
-// }
-
-// type Categoria struct {
-// 	gorm.Model
-// 	Nome string `json:"nome" gorm:"not null" validate:"required,min=2,max=100"`
-// }
-
 // type Livro struct {
 // 	gorm.Model
 // 	Titulo         string    `json:"titulo" gorm:"not null" validate:"required,min=2,max=100"`
