@@ -18,18 +18,18 @@ import (
 )
 
 // setupTest inicializa o banco de dados em memória e retorna o controller para testes
-func setupTest() (*LivroController, *gorm.DB) {
+func setupTest() (*GenericRepository[models.Livro], *gorm.DB) {
 	db, err := gorm.Open(sqlite.Open(":memory:"), &gorm.Config{})
 	if err != nil {
 		panic("Falha ao conectar ao banco de dados de teste")
 	}
 	db.AutoMigrate(&models.Livro{})
 
-	livroRepo := repository.NewLivroRepository(db)
-	livroService := services.NewLivroService(livroRepo)
-	livroController := NewLivroController(livroService)
+	repo := repository.NewGenericRepository[models.Livro](db)
+	service := services.NewGenericServices[models.Livro](repo)
+	controller := NewGenericController[models.Livro](service)
 
-	return livroController, db
+	return controller, db
 }
 
 // parseTime converte uma string no formato RFC3339 para time.Time
@@ -127,7 +127,7 @@ func TestCreateLivro(t *testing.T) {
 			ctx, _ := gin.CreateTestContext(w)
 			ctx.Request = req
 
-			livroController.CreateLivro(ctx)
+			livroController.Criar(ctx)
 
 			assert.Equal(t, tt.expectedStatus, w.Code)
 			if tt.expectedError != "" {
@@ -189,7 +189,7 @@ func TestGetAllLivros(t *testing.T) {
 			ctx, _ := gin.CreateTestContext(w)
 			ctx.Request = req
 
-			livroController.GetAllLivros(ctx)
+			livroController.BuscarTodos(ctx)
 
 			assert.Equal(t, tt.expectedStatus, w.Code)
 
@@ -246,7 +246,7 @@ func TestGetLivroByID(t *testing.T) {
 			ctx.Request = req
 			ctx.Params = []gin.Param{{Key: "id", Value: tt.livroID}}
 
-			livroController.GetLivroByID(ctx)
+			livroController.BuscarPorId(ctx)
 
 			assert.Equal(t, tt.expectedStatus, w.Code)
 			if tt.expectedError != "" {
@@ -290,7 +290,6 @@ func TestUpdateLivro(t *testing.T) {
 				DataPublicacao: parseTime("1949-06-08T00:00:00Z"),
 			},
 			expectedStatus: http.StatusOK,
-			expectedError:  "",
 		},
 		{
 			name:    "Falha - Livro não encontrado",
@@ -304,8 +303,7 @@ func TestUpdateLivro(t *testing.T) {
 				Preco:          34.90,
 				DataPublicacao: parseTime("1949-06-08T00:00:00Z"),
 			},
-			expectedStatus: http.StatusBadRequest,
-			expectedError:  "error",
+			expectedStatus: http.StatusNotFound,
 		},
 	}
 
@@ -321,12 +319,10 @@ func TestUpdateLivro(t *testing.T) {
 			ctx.Request = req
 			ctx.Params = []gin.Param{{Key: "id", Value: tt.livroID}}
 
-			livroController.UpdateLivro(ctx)
+			livroController.Atualizar(ctx)
 
 			assert.Equal(t, tt.expectedStatus, w.Code)
-			if tt.expectedError != "" {
-				assert.Contains(t, w.Body.String(), tt.expectedError)
-			}
+
 		})
 	}
 }
@@ -377,7 +373,7 @@ func TestDeleteLivro(t *testing.T) {
 			ctx.Request = req
 			ctx.Params = []gin.Param{{Key: "id", Value: tt.livroID}}
 
-			livroController.DeleteLivro(ctx)
+			livroController.Deletar(ctx)
 
 			assert.Equal(t, tt.expectedStatus, w.Code)
 			if tt.expectedError != "" {

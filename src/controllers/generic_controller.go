@@ -53,7 +53,7 @@ func (c *GenericRepository[T]) BuscarPorId(ctx *gin.Context) {
 		return
 	}
 
-	if !(Generics.RetornarCampo(entidadeBanco, "ID", uint(0)).(uint) < 1) {
+	if Generics.RetornarCampo(entidadeBanco, "ID", uint(0)).(uint) < 1 {
 		ctx.JSON(http.StatusNotFound, gin.H{"error": "registro não encontrado"})
 		return
 	}
@@ -71,7 +71,13 @@ func (c *GenericRepository[T]) Atualizar(ctx *gin.Context) {
 		return
 	}
 
-	if err := c.Service.Atualizar(id, &entidade); err != nil {
+	err := c.Service.Atualizar(id, &entidade)
+
+	if err != nil {
+		if err.Error() == "nenhum registro encontrado" {
+			ctx.JSON(http.StatusNotFound, gin.H{"": err.Error()})
+			return
+		}
 		ctx.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}

@@ -16,3 +16,8 @@ func NewLivroRepository(db *gorm.DB) *LivroRepository {
 		GenericRepository: *NewGenericRepository[models.Livro](db), // Inicializa o repositório genérico
 	}
 }
+
+// ToGenericRepository: retorna uma instância de GenericRepository
+func (u *LivroRepository) ToGenericRepository() *GenericRepository[models.Livro] {
+	return &u.GenericRepository
+}
