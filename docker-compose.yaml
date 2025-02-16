@@ -1,0 +1,10 @@
+services:
+  app:
+    image: golang
+    container_name: livraria_digital
+    working_dir: /app
+    volumes:
+      - .:/app
+    ports:
+      - "8080:8080"
+    command: go run main.go
