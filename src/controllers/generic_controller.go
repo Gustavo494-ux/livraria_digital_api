@@ -36,7 +36,9 @@ func (c *GenericController[T]) Criar(ctx *gin.Context) {
 
 // BuscarTodos: busca todos os registros no banco de dados
 func (c *GenericController[T]) BuscarTodos(ctx *gin.Context) {
-	entidades, err := c.Service.BuscarTodos()
+	pagincao := retornarPaginacao(ctx)
+
+	entidades, err := c.Service.BuscarTodos(pagincao)
 	if err != nil {
 		ctx.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return

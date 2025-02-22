@@ -2,27 +2,32 @@ package services
 
 import (
 	"errors"
+	"livraria_digital/src/interfaces"
 	"livraria_digital/src/models"
 	"livraria_digital/src/repository"
 )
 
-type LivroService struct {
+type LivroService interface {
+	interfaces.Services[models.Livro]
+	ToGenericService() *GenericServices[models.Livro]
+}
+type livroService struct {
 	GenericServices[models.Livro]
 }
 
-func NewLivroService(repo *repository.GenericRepository[models.Livro]) *LivroService {
-	return &LivroService{
+func NewLivroService(repo *repository.GenericRepository[models.Livro]) LivroService {
+	return &livroService{
 		GenericServices: *NewGenericServices[models.Livro](repo),
 	}
 }
 
 // ToGenericService: retorna uma instância de GenericServices
-func (u *LivroService) ToGenericService() *GenericServices[models.Livro] {
+func (u *livroService) ToGenericService() *GenericServices[models.Livro] {
 	return &u.GenericServices
 }
 
 // validar: verifica se o livro possui dados válidos
-func (s *LivroService) validar(livro *models.Livro) (err error) {
+func (s *livroService) Validar(livro *models.Livro) (err error) {
 	if err := s.Validator.Struct(livro); err != nil {
 		return err
 	}

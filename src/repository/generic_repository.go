@@ -1,6 +1,8 @@
 package repository
 
 import (
+	"livraria_digital/src/models"
+
 	"gorm.io/gorm"
 )
 
@@ -20,26 +22,40 @@ func (r *GenericRepository[T]) Criar(entity *T) error {
 }
 
 // BuscarTodos: busca todos os registros no banco de dados
-func (r *GenericRepository[T]) BuscarTodos() ([]T, error) {
-	var entities []T
-	err := r.DB.Find(&entities).Error
-	return entities, err
+func (r *GenericRepository[T]) BuscarTodos(paginacao models.Paginacao) (resultado models.ResultadoPaginado[T], err error) {
+	err = r.DB.
+		Limit(paginacao.Limite).
+		Offset(paginacao.GetOffset()).
+		Find(&resultado.Dados).Error
+	if err != nil && err != gorm.ErrRecordNotFound {
+		return models.ResultadoPaginado[T]{}, err
+	}
+	return
+}
+
+// RetornarTotalRegistos: retorna uma contagem do total de registros que atedem aos critérios fornecidos
+func (r *GenericRepository[T]) RetornarTotalRegistos(filtro *T) (Total int64, err error) {
+	err = r.DB.Model(filtro).Where(filtro).Count(&Total).Error
+	return
 }
 
 // Buscar: busca registros que correspondem aos critérios fornecidos
-func (r *GenericRepository[T]) Buscar(criteria T) ([]T, error) {
-	var entities []T
-	err := r.DB.Where(criteria).Find(&entities).Error
+func (r *GenericRepository[T]) Buscar(criterio T, paginacao models.Paginacao) (resultado models.ResultadoPaginado[T], err error) {
+	err = r.DB.
+		Where(criterio).
+		Limit(paginacao.Limite).
+		Offset(paginacao.GetOffset()).
+		Find(resultado.Dados).Error
 	if err != nil && err != gorm.ErrRecordNotFound {
-		return nil, err
+		return models.ResultadoPaginado[T]{}, err
 	}
-	return entities, nil
+	return
 }
 
 // BuscarPrimeiro: busca o primeiro registro que corresponde aos critérios fornecidos
-func (r *GenericRepository[T]) BuscarPrimeiro(criteria T) (T, error) {
+func (r *GenericRepository[T]) BuscarPrimeiro(criterio T) (T, error) {
 	var entity T
-	err := r.DB.Where(criteria).First(&entity).Error
+	err := r.DB.Where(criterio).First(&entity).Error
 	if err != nil && err != gorm.ErrRecordNotFound {
 		return entity, err
 	}

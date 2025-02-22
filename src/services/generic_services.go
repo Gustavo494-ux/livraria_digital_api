@@ -2,6 +2,7 @@ package services
 
 import (
 	"errors"
+	"livraria_digital/src/models"
 	Generics "livraria_digital/src/pkg"
 	"livraria_digital/src/repository"
 	"reflect"
@@ -24,7 +25,7 @@ func NewGenericServices[T any](repo *repository.GenericRepository[T]) *GenericSe
 }
 
 // validar: verifica se a entidade possui dados válidos e se não existe no banco
-func (s *GenericServices[T]) validar(valor *T) (err error) {
+func (s *GenericServices[T]) Validar(valor *T) (err error) {
 	if err := s.Validator.Struct(valor); err != nil {
 		return err
 	}
@@ -42,20 +43,30 @@ func (s *GenericServices[T]) validar(valor *T) (err error) {
 }
 
 // Criar: cria um novo registro no banco de dados
-func (s *GenericServices[T]) Criar(valor *T) error {
-	if err := s.validar(valor); err != nil {
+func (s *GenericServices[T]) Criar(valor *T) (err error) {
+	if err := s.Validar(valor); err != nil {
 		return err
 	}
 	return s.Repo.Criar(valor)
 }
 
 // BuscarTodos: busca todos os registros no banco de dados
-func (s *GenericServices[T]) BuscarTodos() ([]T, error) {
-	return s.Repo.BuscarTodos()
+func (s *GenericServices[T]) BuscarTodos(paginacao models.Paginacao) (resultado models.ResultadoPaginado[T], err error) {
+	entidadeVazia := new(T)
+	paginacao.Total, err = s.Repo.RetornarTotalRegistos(entidadeVazia)
+	if err != nil {
+		return models.ResultadoPaginado[T]{}, err
+	}
+
+	resultado, err = s.Repo.BuscarTodos(paginacao)
+	resultado.Paginacao = paginacao
+	resultado.Paginacao.CalcularQuantidadePaginas()
+
+	return
 }
 
 // Buscar: busca o registro com Id fornecido
-func (s *GenericServices[T]) BuscarPorId(Id int) (T, error) {
+func (s *GenericServices[T]) BuscarPorId(Id int) (resultado T, err error) {
 	var valor T
 	Generics.SetarCampo(valor, "ID", Id)
 	return s.Repo.BuscarPrimeiro(valor)
