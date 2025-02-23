@@ -10,7 +10,7 @@ import (
 type ILoginService interface {
 	repository.ILoginRepository
 	BuscarUsuarioPorEmail(email string) (usuario models.Usuario, err error)
-	RealizarLogin(login models.Login) (err error)
+	RealizarLogin(login models.Login) (token string, err error)
 }
 
 type LoginService struct {
@@ -37,19 +37,21 @@ func (r *LoginService) BuscarUsuarioPorEmail(email string) (usuario models.Usuar
 }
 
 // RealizarLogin: verifica as credenciais de login estão corretas
-func (r *LoginService) RealizarLogin(login models.Login) (err error) {
+func (r *LoginService) RealizarLogin(login models.Login) (token string, err error) {
 	usuario, err := r.BuscarUsuarioPorEmail(login.Email)
 	if err != nil {
-		return err
+		return
 	}
 
-	if !usuario.IsID() || !utils.ValidarHash(login.Senha, usuario.Email) {
-		return errors.New("credenciais inválidas")
+	if !usuario.IsID() || !utils.ValidarHash(login.Senha, usuario.Senha) {
+		err = errors.New("credenciais inválidas")
+		return
 	}
 
 	if !usuario.IsAtivo() {
-		return errors.New("usuário inativo")
+		err = errors.New("usuário inativo")
+		return
 	}
 
-	return
+	return usuario.GerarToken()
 }

@@ -1,6 +1,7 @@
 package models
 
 import (
+	"livraria_digital/src/auth"
 	"livraria_digital/src/utils"
 	"time"
 
@@ -40,4 +41,16 @@ func (usuario *Usuario) IsSenhaValida() bool {
 // EnriptarSenha: gera um hash seguro para a senha
 func (usuario *Usuario) EnriptarSenha() {
 	usuario.Senha = utils.GerarHash(usuario.Senha)
+}
+
+// GerarToken: gera um token JWT para o usuário
+func (usuario *Usuario) GerarToken() (string, error) {
+	permissoes := map[string]interface{}{}
+
+	token, err := auth.CriarTokenJWT(usuario.ID, permissoes)
+	if err != nil {
+		return "", err
+	}
+
+	return token, nil
 }

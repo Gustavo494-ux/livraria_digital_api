@@ -30,11 +30,15 @@ func (c *LoginController) RealizarLogin(ctx *gin.Context) {
 		return
 	}
 
-	err := c.service.RealizarLogin(login)
+	token, err := c.service.RealizarLogin(login)
 	if err != nil {
 		ctx.JSON(http.StatusUnauthorized, err.Error())
 		return
 	}
 
-	ctx.JSON(http.StatusOK, "Login realizado")
+	resultado := map[string]string{
+		"sucesso": "true",
+		"token":   token,
+	}
+	ctx.JSON(http.StatusOK, resultado)
 }
