@@ -29,12 +29,12 @@ func NewUsuarioService(repo *repository.UsuarioRepository) *UsuarioService {
 }
 
 // Validar: verifica se o usuário possui dados válidos e se não existe no banco
-func (s *UsuarioService) Validar(valor *models.Usuario) (err error) {
-	if err := s.validator.Struct(valor); err != nil {
+func (s *UsuarioService) Validar(usuario *models.Usuario) (err error) {
+	if err := s.validator.Struct(usuario); err != nil {
 		return err
 	}
 
-	entidadeBanco, err := s.repo.BuscarPrimeiro(*valor)
+	entidadeBanco, err := s.repo.BuscarPrimeiro(*usuario)
 	if err != nil {
 		return err
 	}
@@ -47,11 +47,13 @@ func (s *UsuarioService) Validar(valor *models.Usuario) (err error) {
 }
 
 // Criar: cria um novo registro no banco de dados
-func (s *UsuarioService) Criar(valor *models.Usuario) (err error) {
-	if err := s.Validar(valor); err != nil {
+func (s *UsuarioService) Criar(usuario *models.Usuario) (err error) {
+	if err := s.Validar(usuario); err != nil {
 		return err
 	}
-	return s.repo.Criar(valor)
+
+	usuario.EnriptarSenha()
+	return s.repo.Criar(usuario)
 }
 
 // BuscarTodos: busca todos os registros no banco de dados

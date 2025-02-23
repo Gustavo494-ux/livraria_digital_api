@@ -23,6 +23,7 @@ func SetupRoutes() *gin.Engine {
 
 // ConfigurarRotas: configura as rotas
 func ConfigurarRotas(r *gin.Engine, db *gorm.DB) {
+	ConfigurarLogin(r, db)
 	ConfigurarUsuarios(r, db)
 	ConfigurarLivros(r, db)
 	ConfigurarAutor(r, db)

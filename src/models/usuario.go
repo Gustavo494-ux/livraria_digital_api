@@ -1,6 +1,7 @@
 package models
 
 import (
+	"livraria_digital/src/utils"
 	"time"
 
 	"gorm.io/gorm"
@@ -34,4 +35,9 @@ func (usuario *Usuario) IsEmailValido() bool {
 // IsSenhaValida: verifica se a senha tem pelo menos 6 caracteres
 func (usuario *Usuario) IsSenhaValida() bool {
 	return len(usuario.Senha) >= 6
+}
+
+// EnriptarSenha: gera um hash seguro para a senha
+func (usuario *Usuario) EnriptarSenha() {
+	usuario.Senha = utils.GerarHash(usuario.Senha)
 }
