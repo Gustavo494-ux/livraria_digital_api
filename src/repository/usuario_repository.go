@@ -1,10 +1,15 @@
 package repository
 
 import (
+	"livraria_digital/src/interfaces"
 	"livraria_digital/src/models"
 
 	"gorm.io/gorm"
 )
+
+type IUsuarioRepository interface {
+	interfaces.Repository[models.Usuario]
+}
 
 type UsuarioRepository struct {
 	GenericRepository[models.Usuario]
@@ -15,9 +20,4 @@ func NewUsuarioRepository(db *gorm.DB) *UsuarioRepository {
 	return &UsuarioRepository{
 		GenericRepository: *NewGenericRepository[models.Usuario](db),
 	}
-}
-
-// ToGenericRepository: retorna uma instância de GenericRepository
-func (u *UsuarioRepository) ToGenericRepository() *GenericRepository[models.Usuario] {
-	return &u.GenericRepository
 }

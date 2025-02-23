@@ -3,7 +3,7 @@ package controllers
 import (
 	"bytes"
 	"encoding/json"
-	interfaces "livraria_digital/src/interfaces/controller"
+	"livraria_digital/src/interfaces"
 	"net/http"
 	"net/http/httptest"
 	"testing"

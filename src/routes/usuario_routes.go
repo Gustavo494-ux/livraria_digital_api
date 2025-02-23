@@ -14,8 +14,8 @@ import (
 func ConfigurarUsuarios(r *gin.Engine, db *gorm.DB) {
 	db.AutoMigrate(&models.Usuario{})
 
-	var repo = repository.NewUsuarioRepository(db).ToGenericRepository()
-	service := services.NewUsuarioService(repo).ToGenericService()
+	repo := repository.NewUsuarioRepository(db)
+	service := services.NewUsuarioService(repo)
 	controller := controllers.NewUsuarioController(service)
 
 	usuarios := r.Group("/usuarios")
