@@ -1,4 +1,4 @@
-package Generics
+package pkg
 
 import (
 	"fmt"

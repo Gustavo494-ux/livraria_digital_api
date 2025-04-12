@@ -1,12 +1,13 @@
 package controllers
 
 import (
-	"livraria_digital/src/interfaces"
-	"livraria_digital/src/models"
-	"livraria_digital/src/services"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
+
+	"livraria_digital/src/interfaces"
+	"livraria_digital/src/models"
+	"livraria_digital/src/services"
 )
 
 type IUsuarioController interface {
@@ -32,7 +33,7 @@ func (u *UsuarioController) Criar(ctx *gin.Context) {
 	}
 
 	if err := u.service.Criar(&usuario); err != nil {
-		ctx.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		ctx.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}
 

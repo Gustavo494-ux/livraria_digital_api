@@ -1,11 +1,12 @@
 package models
 
 import (
-	"livraria_digital/src/auth"
-	"livraria_digital/src/utils"
 	"time"
 
 	"gorm.io/gorm"
+
+	"livraria_digital/src/auth"
+	"livraria_digital/src/utils"
 )
 
 type Usuario struct {
@@ -13,7 +14,7 @@ type Usuario struct {
 	GenericModel[Usuario]
 	Nome        string    `json:"nome" gorm:"not null" validate:"required,min=2,max=100"`
 	Email       string    `json:"email" gorm:"unique;not null" validate:"required,email"`
-	Senha       string    `json:"senha" gorm:"not null" validate:"required,min=6"`
+	Senha       string    `json:"senha,omitempty" gorm:"not null" validate:"required,min=6"  serializar:"false"`
 	Ativo       bool      `json:"ativo" gorm:"not null" validate:"required"`
 	UltimoLogin time.Time `json:"ultimo_login"`
 }

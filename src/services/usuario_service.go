@@ -1,14 +1,16 @@
 package services
 
 import (
+	"encoding/json"
 	"errors"
+
+	"github.com/go-playground/validator/v10"
+
 	"livraria_digital/src/interfaces"
 	"livraria_digital/src/models"
 	Generics "livraria_digital/src/pkg"
+	"livraria_digital/src/pkg/GerenciadordeJson"
 	"livraria_digital/src/repository"
-	"reflect"
-
-	"github.com/go-playground/validator/v10"
 )
 
 type IUsuarioService interface {
@@ -34,13 +36,13 @@ func (s *UsuarioService) Validar(usuario *models.Usuario) (err error) {
 		return err
 	}
 
-	entidadeBanco, err := s.repo.BuscarPrimeiro(*usuario)
+	usuarioBanco, err := s.repo.BuscarPrimeiro(*usuario)
 	if err != nil {
 		return err
 	}
 
-	if !reflect.ValueOf(entidadeBanco).IsZero() {
-		return errors.New("registro existente")
+	if !usuarioBanco.IsID() {
+		return errors.New("usuario existente")
 	}
 
 	return
@@ -64,6 +66,7 @@ func (s *UsuarioService) BuscarTodos(paginacao models.Paginacao) (resultado mode
 	}
 
 	resultado, err = s.repo.BuscarTodos(paginacao)
+	TratarUsuarioParaResposta(resultado.Dados...)
 	resultado.Paginacao = paginacao
 	resultado.Paginacao.CalcularQuantidadePaginas()
 
@@ -74,7 +77,11 @@ func (s *UsuarioService) BuscarTodos(paginacao models.Paginacao) (resultado mode
 func (s *UsuarioService) BuscarPorId(Id int) (resultado models.Usuario, err error) {
 	usuarioFiltro := models.Usuario{}
 	usuarioFiltro.ID = uint(Id)
-	return s.repo.BuscarPrimeiro(usuarioFiltro)
+
+	usuarioBanco, err := s.repo.BuscarPrimeiro(usuarioFiltro)
+	TratarUsuarioParaResposta(&usuarioBanco)
+
+	return usuarioBanco, err
 }
 
 // Atualizar: atualiza um registro no banco de dados
@@ -96,6 +103,7 @@ func (s *UsuarioService) Atualizar(Id int, usuarioParametro *models.Usuario) (er
 		usuarioParametro,
 	)
 
+	TratarUsuarioParaResposta(usuarioParametro)
 	return s.repo.Atualizar(usuarioParametro)
 }
 
@@ -114,4 +122,22 @@ func (s *UsuarioService) Deletar(Id int) error {
 	}
 
 	return s.repo.Deletar(usuarioBanco)
+}
+
+// TratarUsuarioParaResposta: trata o usuário para responder a solicitação de forma adequada
+func TratarUsuarioParaResposta(usuariosInput ...*models.Usuario) {
+	for i, usuario := range usuariosInput {
+		if usuario == nil || usuario.ID == 0 {
+			if i < len(usuariosInput) {
+				usuariosInput[i] = nil
+			}
+			continue
+		}
+
+		jsonByte, _ := GerenciadordeJson.IgnorarCamposPelaTag(*usuario, "serializar", "false")
+
+		novoUsuario := models.Usuario{Model: usuario.Model}
+		json.Unmarshal(jsonByte, &novoUsuario)
+		*usuario = novoUsuario
+	}
 }
